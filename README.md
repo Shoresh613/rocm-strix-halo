@@ -4,11 +4,11 @@ ROCm is now officially supported by AMD on the Strix Halo architechture, see htt
 
 **Why is this a good thing?** It breaks the NVIDIA monopoly and makes it possible for a consumer computer under 20k EUR to have 100+ GB VRAM and infer 120b models at speed! Compare 100+ GB VRAM to 32GB on a 5090, where only the 5090 sets you back roughly twice the amount needed to buy two whole GMKTec Evo-X2 computers, or a 6000 Pro for 10k EUR where you still only get 96GB VRAM. Ok, to be fair, there's the DGX Sparc, but that is not a full blown computer and it still costs 2.5x.
 
-Enough to make any nerd drewl: Here's a video showing inference in real time (no cutting) with the 120b model using Ollama in open-webui:
+*Enough to make any nerd drewl:* Here's a video showing inference in real time (no cutting) with the 120b model using Ollama in open-webui:
 
 ![Demo animation](./assets/inference_demo.gif)
 
-The steps are fairly straight-forward compared to how it had to be done for earlier versions of ROCm. The results here are based on running on a GMKtec EVO-X2 with 128GB RAM and 8TB SSD. 
+The steps for installing ROCm 7.1 are fairly straight-forward compared to how it had to be done for earlier versions of ROCm. The results here are based on running on a GMKtec EVO-X2 with 128GB RAM and 8TB SSD. 
 
 Required components:
 
@@ -106,7 +106,7 @@ Run this to see if it finds the AMD GPU:
 lsmod | grep amdgpu
 ```
 
-### If it did not
+### If it did not find the GPU
 If not, add it manually:
 
 ```bash 
@@ -144,7 +144,7 @@ sudo update-initramfs -u -k 6.14.0-1015-oem
 
 Reboot to make sure it sticks. 
 
-### If it does find it
+### If it does find the GPU
 Also make sure rocminfo finds it:
 
 ```bash
@@ -263,7 +263,7 @@ If going for this path, and you at some point want to use the first path instead
 
 Use LLMs locally with GPU acceleration on Ollama. As the support for AMD GPU's is under development and some installs might go wonky somewhere in the process, it is not certain that Ollama will detect the GPU initially.
 
-Try to install it and see if it runs gpt-oss:120b fast (~35 tokens/s) or sluggishly (~4 tokens/s).
+Try to install it and see if it runs `gpt-oss:120b` fast (~35 tokens/s) or sluggishly (~4 tokens/s).
 
 Install Ollama using the official script:
 ```bash
@@ -283,6 +283,7 @@ Once it has pulled it you can chat away with it. If you're not getting frustrate
 In this case it could be worthwhile to try to build both llama.cpp and ollama locally as there is still no native default support (at the time of writing).
 
 ```bash
+cd ~
 git clone https://github.com/ollama/ollama.git
 cd ollama
 ```
@@ -314,7 +315,7 @@ make -f Makefile.sync clean apply-patches sync
 Create a build folder:
 
 ```bash
-cd ~/repos/ollama/llama/vendor
+cd ~/ollama/llama/vendor
 mkdir build
 cd build
 ```
@@ -338,6 +339,13 @@ When finished, test:
 
 You should see "BLAS = HIPBLAS" or "using HIP backend"
 
+Now also build Ollama:
+
+```bash
+cd ~/ollama
+go build .
+```
+
 Then point ollama to the libraries you compiled for your computer (replace the OLLAMA_LIBRARY_PATH with your path):
 
 ```bash
@@ -346,9 +354,11 @@ sudo systemctl edit ollama
 
 Under [Service] add:
 
+```bash
 Environment="OLLAMA_LLM_LIBRARY=hip"
 Environment="OLLAMA_LIBRARY_PATH=/home/yourusername/ollama/llama/vendor/lib/ollama"
 Environment="HIP_VISIBLE_DEVICES=0"
+```
 
 Restart the service:
 
