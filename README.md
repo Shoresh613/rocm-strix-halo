@@ -161,7 +161,7 @@ You can now use `rocm-smi` to check the status of your GPU (workload, temperatur
 watch rocm-smi
 ```
 
-## Official PyTorch support (Docling example)
+# Official PyTorch support (Docling example)
 Here's how to install Pytorch once ROCm is installed.
 
 https://rocm.docs.amd.com/projects/radeon-ryzen/en/latest/docs/install/installryz/native_linux/install-pytorch.html
@@ -272,7 +272,7 @@ Install Ollama using the official script:
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
-Run ollama for instance with the gpt-oss:120b model:
+Run ollama for instance with the `gpt-oss:120b` model:
 
 ```bash
 ollama run gpt-oss:120b
@@ -371,9 +371,9 @@ journalctl -u ollama -n 50 -f
 ```
 Hopefully now you should see that it recognizes your GPU.
 
-Expect something like input tokens at 400-500 tokens per second, and output tokens at around 35 tokens per second on gpt-oss:120b.
+Expect something like input tokens at 400-500 tokens per second, and output tokens at around 35 tokens per second on `gpt-oss:120b`.
 
-With a moderate 96 GB VRAM setting gpt-oss:120b still only occupies 63% of the VRAM!
+With a moderate 96 GB VRAM setting `gpt-oss:120b` still only occupies 63% of the VRAM!
 
 ![ROCm SMI screenshot](./assets/rocm-smi.png)
 
@@ -392,7 +392,7 @@ For the Windows version, the following gains compared to running on GPU are spec
 
 BF16 Compiler improvements (for CNN, Transformer), average ~80% performance boost, 1.3× faster on CNN than iGPU, 2.6× faster for transformers than iGPU.
 
-As I have not yet been granted access to the Ryzen AI Software Early Access Lounge, I will only link to the official guide. It is suggested to apply for Early Access (which includes signing an NDA, and it has to be done through a work e-mail address):
+**Section to be updated as soon as I get access granted to the Ryzen AI Software Early Access Lounge:**
 
 https://ryzenai.docs.amd.com/en/latest/linux.html#install-ryzen-ai-software
 
