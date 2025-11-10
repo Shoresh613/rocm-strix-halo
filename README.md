@@ -360,11 +360,14 @@ Hopefully now you should see that it recognizes your GPU.
 
 Expect something like input tokens at 400-500 tokens per second, and output tokens at around 35 tokens per second on gpt-oss:120b.
 
+Here's a video showing inference in real time (no cutting) with the 120b model using Ollama in open-webui:
+![Demo animation](./assets/inference_demo.gif)
 
-TODO:
+With a moderate 96 GB VRAM setting it still only occupies 63% if the VRAM!
 
-Add images.
+![ROCm SMI screenshot](./assets/rocm-smi.png)
 
+As if that would not be enough, there's a possibility to increase the speed even further:
 
 ## Bonus: Linux now has NPU support
 
