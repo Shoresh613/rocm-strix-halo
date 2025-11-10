@@ -2,7 +2,13 @@
 
 ROCm is now officially supported by AMD on the Strix Halo architechture, see https://rocm.docs.amd.com/projects/radeon-ryzen/en/latest/docs/compatibility/compatibilityryz/native_linux/native_linux_compatibility.html
 
-The steps are fairly straight-forward compared to how it had to be done for earlier versions of ROCm.
+**Why is this a good thing?** It breaks the NVIDIA monopoly and makes it possible for a consumer computer under 20k EUR to have 100+ GB VRAM and infer 120b models at speed! Compare 100+ GB VRAM to 32GB on a 5090, where only the 5090 sets you back roughly twice the amount needed to buy two whole GMKTec Evo-X2 computers, or a 6000 Pro for 10k EUR where you still only get 96GB VRAM. Ok, to be fair, there's the DGX Sparc, but that is not a full blown computer and it still costs 2.5x.
+
+Enough to make any nerd drewl: Here's a video showing inference in real time (no cutting) with the 120b model using Ollama in open-webui:
+
+![Demo animation](./assets/inference_demo.gif)
+
+The steps are fairly straight-forward compared to how it had to be done for earlier versions of ROCm. The results here are based on running on a GMKtec EVO-X2 with 128GB RAM and 8TB SSD. 
 
 Required components:
 
@@ -10,12 +16,11 @@ Required components:
 * Kernel 6.14 OEM
 * ROCm v.7.1
 
-Assuming you have the correct version of Ubuntu installed.
-
+This guide assumes you have the correct version of Ubuntu installed.
 
 ## Install the kernel
 
-You need an uptodate kernel that's known to work. At the time of writing this is the one officially supported by AMD:
+You need an up-to-date kernel that is known to work with ROCm. At the time of writing this is the one officially supported by AMD:
 
 ```bash
 sudo apt update && sudo apt-get install linux-oem-24.04c
@@ -32,7 +37,7 @@ Make sure you are on the new kernel:
 ```bash 
 uname -r
 ```
-This should show 6.14 OEM*.
+This should show something like "6.14.0-1015-oem".
 
 ### Making 6.14 default
 
@@ -57,13 +62,11 @@ Update the line with GRUB_DEFAULT to `GRUB_DEFAULT="Advanced options for Ubuntu>
 sudo update-grub
 ```
 
-After reboot, confirm with
+After reboot, confirm that the correct kernel is in use:
 
 ```bash
 uname -r
 ```
-
-that the correct kernel is in use.
 
 ## Install ROCm
 
@@ -83,8 +86,6 @@ sudo apt install ./amdgpu-install_7.1.70100-1_all.deb
 Warnings like the one below can be safely ignored:
 
 ```N: Download is performed unsandboxed as root as file ‘/home/hakedev/amdgpu-install_7.1.70100-1_all.deb’ couldn’t be accessed by user ‘_apt’. - pkgAcquire::Run (13: Permission denied)```
-
-
 
 Run the installer:
 
@@ -120,7 +121,7 @@ You can make this permanent by telling it to always load this module:
 echo amdgpu | sudo tee /etc/modules-load.d/amdgpu.conf
 ```
 
-It could be that it is still blacklisted. Find out:
+But if it still doesn't find it, it could be that it is still blacklisted. Find out:
 
 ```bash
 grep -R "blacklist amdgpu" /etc/modprobe.d
@@ -128,7 +129,7 @@ grep -R "blacklist amdgpu" /etc/modprobe.d
 
 If something is found, you need to comment it out or remove it.
 
-Edit the file listed in the above command, e.g.:
+Edit the file listed in the output of the above command, e.g.:
 
 ```bash
 sudo nano /etc/modprobe.d/blacklist-amdgpu.conf
@@ -138,7 +139,7 @@ Comment the line out using # or delete the line.
 If you did the above step, you also need to rebuild initramfs specifying your kernel:
 
 ```bash
-sudo update-initramfs -u -k 6.14.1015-OEM
+sudo update-initramfs -u -k 6.14.0-1015-oem
 ```
 
 Reboot to make sure it sticks. 
@@ -152,26 +153,26 @@ Also make sure rocminfo finds it:
 
 Congratulations, you now have ROCm support on your Strix Halo!
 
-You can now use `rocm-smi` to check the status of your GPU (workload, temperature). Use watch for permanent reading. In a terminal you can have this open (if you like):
+You can now use `rocm-smi` to check the status of your GPU (workload, temperature, VRAM usage). Use watch for permanent reading. In a terminal you can have this open (if you like):
 
 ```bash 
 watch rocm-smi
 ```
 
-## Installing PyTorch (Docling example)
-Here's how to install pytorch once ROCm is installed.
+## Official PyTorch support (Docling example)
+Here's how to install Pytorch once ROCm is installed.
 
 https://rocm.docs.amd.com/projects/radeon-ryzen/en/latest/docs/install/installryz/native_linux/install-pytorch.html
 
-We will use uv to install it in virtual environments. Make sure to install pytorch before installing the requirements for the project, in order for the correct pytorch to be pulled. Installing the wrong pytorch first, then removing it, and only then installing the correct pytorch has a high probability of failure.
+We will use `uv` to install it in virtual environments. Make sure to install pytorch before installing the requirements for the project, in order for the correct pytorch to be pulled. Installing the wrong pytorch first, then removing it, and only then installing the correct pytorch has a high probability of failure.
 
-Make sure you have astral-uv installed:
+Make sure you have `astral-uv` installed:
 
 ```bash
 sudo snap install astral-uv
 ```
 
-In this scenario, we will install it for use with Docling, so we create a docling folder at a suitable location.
+In this scenario, we will install it for use with Docling, so we create a docling folder at a suitable location, e.g:
 
 ```bash
 mkdir ~/docling
@@ -213,7 +214,7 @@ python3 -c 'import torch; print(torch.cuda.is_available())'
 If true, you're all set.
 
 # Increasing VRAM
-Use either of these two paths to increase the VRAM available, default is 64GB. Using the BIOS the maximum you can set is 96GB. Using amd-ttm you can set it freely (you can even set something like 112GB VRAM, leaving some 16GB RAM).
+Use either of the two paths below to increase the available VRAM, the default is 64GB (way too little, right?). Using the BIOS the maximum you can set is 96GB. Using amd-ttm you can set it freely (you can even set something like 112GB VRAM, leaving some 16GB RAM).
 
 ## Path 1: Set freely (recommended)
 
@@ -260,7 +261,7 @@ If going for this path, and you at some point want to use the first path instead
 
 ## Ollama
 
-Use LLMs locally with GPU acceleration with Ollama. As the support for AMD GPU's is under development and some installs might go wonky somewhere in the process, it is not certain that Ollama will detect the GPU.
+Use LLMs locally with GPU acceleration on Ollama. As the support for AMD GPU's is under development and some installs might go wonky somewhere in the process, it is not certain that Ollama will detect the GPU initially.
 
 Try to install it and see if it runs gpt-oss:120b fast (~35 tokens/s) or sluggishly (~4 tokens/s).
 
@@ -337,7 +338,7 @@ When finished, test:
 
 You should see "BLAS = HIPBLAS" or "using HIP backend"
 
-Then point ollama to the libraries you compiled for your computer (replace the OLLAMA_LIBRARY_PATH to your path):
+Then point ollama to the libraries you compiled for your computer (replace the OLLAMA_LIBRARY_PATH with your path):
 
 ```bash
 sudo systemctl edit ollama
@@ -360,10 +361,7 @@ Hopefully now you should see that it recognizes your GPU.
 
 Expect something like input tokens at 400-500 tokens per second, and output tokens at around 35 tokens per second on gpt-oss:120b.
 
-Here's a video showing inference in real time (no cutting) with the 120b model using Ollama in open-webui:
-![Demo animation](./assets/inference_demo.gif)
-
-With a moderate 96 GB VRAM setting it still only occupies 63% if the VRAM!
+With a moderate 96 GB VRAM setting gpt-oss:120b still only occupies 63% of the VRAM!
 
 ![ROCm SMI screenshot](./assets/rocm-smi.png)
 
