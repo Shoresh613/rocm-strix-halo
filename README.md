@@ -223,7 +223,7 @@ Use either of the two paths below to increase the available VRAM, the default is
 We can use the same Docling venv to install AMD debug tools:
 
 ```bash
-uv install amd-debug-tools
+uv pip install amd-debug-tools
 ```
 
 Check your current settings:
