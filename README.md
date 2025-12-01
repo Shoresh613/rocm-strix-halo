@@ -14,7 +14,7 @@ Required components:
 
 * Ubuntu 24.04 LTS
 * Kernel 6.14 OEM
-* ROCm v.7.1
+* ROCm v.7.1.1
 
 This guide assumes you have the correct version of Ubuntu installed.
 
@@ -39,7 +39,7 @@ Make sure you are on the new kernel:
 ```bash 
 uname -r
 ```
-This should show something like "6.14.0-1015-oem".
+This should show something like "6.14.0-1016-oem".
 
 ### Making 6.14 default
 
@@ -58,7 +58,7 @@ Set the preferred entry as default:
 ```bash
 sudo nano /etc/default/grub
 ```
-Update the line with GRUB_DEFAULT to `GRUB_DEFAULT="Advanced options for Ubuntu>Ubuntu, with Linux 6.14.0-1015-oem"`, replacing "Ubuntu, with Linux 6.14.0-1015-oem" with your exact version. Then update grub.
+Update the line with GRUB_DEFAULT to `GRUB_DEFAULT="Advanced options for Ubuntu>Ubuntu, with Linux 6.14.0-1016-oem"`, replacing "Ubuntu, with Linux 6.14.0-1015-oem" with your exact version. Then update grub.
 
 ```bash
 sudo update-grub
@@ -194,7 +194,7 @@ Install the latest pip and wheel:
 uv pip install --upgrade pip wheel
 ```
 
-Get the correct wheels and install them:
+Get the correct wheels and install them (these are for the ROCm 7.1 release):
 
 ```bash
 wget https://repo.radeon.com/rocm/manylinux/rocm-rel-7.1/torch-2.8.0%2Brocm7.1.0.lw.git7a520360-cp312-cp312-linux_x86_64.whl
