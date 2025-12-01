@@ -2,7 +2,7 @@
 
 ROCm is now (nov 2025) officially supported by AMD on the Strix Halo architechture, see https://rocm.docs.amd.com/projects/radeon-ryzen/en/latest/docs/compatibility/compatibilityryz/native_linux/native_linux_compatibility.html
 
-**Why is this a good thing?** It breaks the NVIDIA monopoly and makes it possible for a consumer computer under 2k EUR/USD to have 100+ GB VRAM and infer 120b models at speed! Compare 100+ GB VRAM to 32GB on a 5090, where only the 5090 sets you back roughly twice the amount needed to buy two whole GMKTec Evo-X2 computers, or a 6000 Pro for 10k EUR where you still only get 96GB VRAM. Ok, to be fair, there's the DGX Sparc, but that is not a full blown computer and it still costs 2.5x.
+**Why is this a good thing?** It breaks the NVIDIA monopoly and makes it possible for a consumer computer under 2k EUR/USD to have 100+ GB VRAM and infer 120b models at speed! Compare 100+ GB VRAM to 32GB on a 5090, where only the 5090 sets you back roughly twice the amount needed to buy two whole GMKTec Evo-X2 or Bosgame M5 computers, or a 6000 Pro for 10k EUR where you still only get 96GB VRAM. Ok, to be fair, there's the DGX Sparc, but that is not a full blown computer and it still costs 2.5x.
 
 *Enough to make any nerd drewl:* Here's a video showing inference in real time (no cutting) with the 120b model using Ollama in open-webui, where the GPU is consuming less power than a classic light bulb:
 
