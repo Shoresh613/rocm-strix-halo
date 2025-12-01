@@ -81,18 +81,18 @@ sudo apt update && sudo apt upgrade -y
 Get and install the AMD GPU installer script:
 
 ```bash
-wget https://repo.radeon.com/amdgpu-install/7.1/ubuntu/noble/amdgpu-install_7.1.70100-1_all.deb
-sudo apt install ./amdgpu-install_7.1.70100-1_all.deb
+wget https://repo.radeon.com/amdgpu-install/7.1.1/ubuntu/noble/amdgpu-install_7.1.1.70101-1_all.deb
+sudo apt install ./amdgpu-install_7.1.1.70101-1_all.deb
 ```
 
 Warnings like the one below can be safely ignored:
 
-```N: Download is performed unsandboxed as root as file ‘/home/hakedev/amdgpu-install_7.1.70100-1_all.deb’ couldn’t be accessed by user ‘_apt’. - pkgAcquire::Run (13: Permission denied)```
+```N: Download is performed unsandboxed as root as file ‘/home/hakedev/amdgpu-install_7.1.1.70100-1_all.deb’ couldn’t be accessed by user ‘_apt’. - pkgAcquire::Run (13: Permission denied)```
 
 Run the installer:
 
 ```bash 
-amdgpu-install --usecase=rocm,opencl,hip,graphics
+amdgpu-install --usecase=rocm,opencl,hip,graphics,dkms
 ```
 Make sure *not* to specify --no-dkms, as you will want those modules installed. Then add yourself to the video and render user groups:
 
